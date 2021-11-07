@@ -6,7 +6,7 @@ import useAuth from '../../../Hooks/useAuth';
 
 const Login = () => {
     const [loginData, setLoginData] = useState({});
-    const {user,loginUser,isLoding,authError}=useAuth();
+    const {user,loginUser,isLoding,authError, signInWithGoogle}=useAuth();
 
     const location = useLocation();
     const history = useHistory();
@@ -24,7 +24,12 @@ const Login = () => {
         loginUser(loginData.email, loginData.password, location, history)
         e.preventDefault();
         // alert('form submited')
-    }
+    };
+
+    const handelGoogleLogin = () =>{
+        signInWithGoogle(location, history)
+    };
+
     return (
         <Container>
             <Grid container spacing={2}>
@@ -36,7 +41,7 @@ const Login = () => {
                             id="standard-basic"
                             label="Your Email"
                             name='email'
-                            onChange={handeleOnChange}
+                            onBlur={handeleOnChange}
                             variant="standard" />
 
                         <TextField
@@ -47,10 +52,12 @@ const Login = () => {
                             type="password"
                             name='password'
                             autoComplete="current-password"
-                            onChange={handeleOnChange}
+                            onBlur={handeleOnChange}
                             variant="standard"/>
 
                             <Button sx={{width:'75%', m:2,}} type='submit' variant="contained">Login</Button>
+                            
+                            <Button onClick={handelGoogleLogin} sx={{width:'30%', m:2,}} type='submit' variant="contained">Google Signin</Button> <br/>
 
                             <NavLink to='/register'>
                                <Button style={{textDecoration:'none'}} >New User ??? Please Register</Button>

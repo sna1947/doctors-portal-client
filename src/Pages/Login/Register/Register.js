@@ -1,6 +1,6 @@
 import { Button, CircularProgress, Container, Grid, TextField, Typography, Alert } from '@mui/material';
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import useAuth from '../../../Hooks/useAuth';
 import login from '../../../images/login.png'
 
@@ -8,7 +8,9 @@ const Register = () => {
     const [loginData, setLoginData] = useState({});
     const {user, registerUser, isLoding, authError } = useAuth();
 
-    const handeleOnChange = e => {
+    const history = useHistory();
+
+    const handeleOnBlur = e => {
         const field = e.target.name;
         const value = e.target.value;
         console.log(field, value);
@@ -22,7 +24,7 @@ const Register = () => {
             alert('password did not match');
             return;
         }
-        registerUser(loginData.email, loginData.password,);
+        registerUser(loginData.email, loginData.password, loginData.name, history);
         e.preventDefault();
     };
 
@@ -38,10 +40,19 @@ const Register = () => {
                         <TextField
                             sx={{ width: '75%', m: 1 }}
                             id="standard-basic"
+                            label="Your Name"
+                            name='name'
+                            // type='email'
+                            onBlur={handeleOnBlur}
+                            variant="standard" />
+
+                        <TextField
+                            sx={{ width: '75%', m: 1 }}
+                            id="standard-basic"
                             label="Your Email"
                             name='email'
                             type='email'
-                            onChange={handeleOnChange}
+                            onBlur={handeleOnBlur}
                             variant="standard" />
 
                         <TextField
@@ -52,7 +63,7 @@ const Register = () => {
                             type="password"
                             name='password'
                             autoComplete="current-password"
-                            onChange={handeleOnChange}
+                            onBlur={handeleOnBlur}
                             variant="standard" />
 
                         <TextField
@@ -63,7 +74,7 @@ const Register = () => {
                             type="password"
                             name='password2'
                             autoComplete="current-password"
-                            onChange={handeleOnChange}
+                            onBlur={handeleOnBlur}
                             variant="standard" />
 
                         <Button sx={{ width: '75%', m: 2, }} type='submit' variant="contained">Register</Button>

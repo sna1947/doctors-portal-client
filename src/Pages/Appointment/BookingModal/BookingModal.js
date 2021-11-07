@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -6,6 +6,8 @@ import Fade from '@mui/material/Fade';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { Button } from '@mui/material';
+import useAuth from '../../../Hooks/useAuth';
+import { Email } from '@mui/icons-material';
 
 const style = {
     position: 'absolute',
@@ -19,10 +21,45 @@ const style = {
     p: 4,
 };
 
-const BookingModal = ({ openBooking, handleBookingClose, booking, date }) => {
+const BookingModal = ({ openBooking, handleBookingClose, booking, date, setBookingSuccess }) => {
     const { name, time } = booking;
+    const {user} = useAuth();
+    const initialInfo = {patientName:user.displayName, email:user.email, phone:''};
+    const [bookingInfo, setBookingInfo]= useState(initialInfo);
+
+    const handaleOnBlur = e =>{
+     const field = e.target.name;
+     const value = e.target.value;
+     const newInfo = {...bookingInfo};
+     newInfo[field] = value;
+     console.log(newInfo)
+     setBookingInfo(newInfo);
+    }
+    
+
 
     const handelBookingSubmit = e =>{
+        const appointMent= {
+            ...bookingInfo,
+            time,
+            serviceName:name,
+            date:date.toLocaleDateString()
+        }
+
+        fetch('http://localhost:5000/appointments',{
+            method:'POST',
+            headers:{'content-type':'application/json'},
+            body:JSON.stringify(appointMent)
+        })
+         .then(res => res.json())
+         .then(data =>{
+             if(data.insertedId){
+                setBookingSuccess(true)
+                handleBookingClose()
+             }
+         })
+
+        console.log(appointMent)
         e.preventDefault();
         handleBookingClose();
         alert('submited succfully');
@@ -42,9 +79,7 @@ const BookingModal = ({ openBooking, handleBookingClose, booking, date }) => {
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     {name}
                 </Typography>
-                {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    {time}
-                </Typography> */}
+
                 <form onSubmit={handelBookingSubmit}>
                     <TextField
                         disabled
@@ -57,30 +92,38 @@ const BookingModal = ({ openBooking, handleBookingClose, booking, date }) => {
                         
                         sx={{width:'90%'}}
                         id="outlined-size-small"
-                        defaultValue="your name"
+                        name='patientName'
+                        onBlur={handaleOnBlur}
+                        defaultValue={user.displayName}
                         size="small"
                     />
+
                     <TextField
                         
                         sx={{width:'90%'}}
                         id="outlined-size-small"
-                        defaultValue="email"
+                        name='email'
+                        onBlur={handaleOnBlur}
+                        defaultValue={user.email}
                         size="small"
                     />
+
                     <TextField
                         
                         sx={{width:'90%'}}
                         id="outlined-size-small"
+                        name='phone'
+                        onBlur={handaleOnBlur}
                         defaultValue="phone number"
                         size="small"
                     />
-                    <TextField
+                    {/* <TextField
                         
                         sx={{width:'90%'}}
                         id="outlined-size-small"
                         defaultValue="address"
                         size="small"
-                    />
+                    /> */}
                     <TextField
                         disabled
                         sx={{width:'90%'}}
