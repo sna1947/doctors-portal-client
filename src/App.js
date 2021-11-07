@@ -6,20 +6,23 @@ import Appointment from './Pages/Appointment/Appointment/Appointment';
 import Login from './Pages/Login/Login/Login';
 import Register from './Pages/Login/Register/Register';
 import initializeAuthencation from './Pages/Login/Firebase/firebase.initialize';
+import AuthProvider from './contexts/AuthProvider/AuthProvider';
+import PrivateRoute from './Pages/Login/PrivateRoute/PrivateRoute';
 
 initializeAuthencation();
 
 function App() {
   return (
     <div className="App">
-      <Router>
+     <AuthProvider>
+     <Router>
       <Switch>
           <Route path="/about">
             <Home />
           </Route>
-          <Route path="/appointment">
+          <PrivateRoute path="/appointment">
             <Appointment></Appointment>
-          </Route>
+          </PrivateRoute>
           <Route path="/users">
             <Home />
           </Route>
@@ -29,12 +32,12 @@ function App() {
           <Route path="/register">
             <Register />
           </Route>
-
           <Route exact path="/">
             <Home />
           </Route>
         </Switch>
       </Router>
+     </AuthProvider>
     </div>
   );
 }
