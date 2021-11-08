@@ -8,6 +8,7 @@ import Register from './Pages/Login/Register/Register';
 import initializeAuthencation from './Pages/Login/Firebase/firebase.initialize';
 import AuthProvider from './contexts/AuthProvider/AuthProvider';
 import PrivateRoute from './Pages/Login/PrivateRoute/PrivateRoute';
+import Dashboard from './Pages/Dashboard/Dashboard/Dashboard';
 
 initializeAuthencation();
 
@@ -22,6 +23,9 @@ function App() {
           </Route>
           <PrivateRoute path="/appointment">
             <Appointment></Appointment>
+          </PrivateRoute>
+          <PrivateRoute path="/dashboard">
+            <Dashboard></Dashboard>
           </PrivateRoute>
           <Route path="/users">
             <Home />

@@ -27,12 +27,19 @@ const Navication = () => {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
              Doctors Portal
             </Typography>
-            <Link to='/appointment'> <Button color="inherit">Appointment</Button>  </Link>
+            <Link style={{color:"white", textDecoration:'none'}} to='/appointment'> <Button color="inherit">Appointment</Button>  </Link>
 
             {
               user?.email ? 
+              <Box>
+                <NavLink style={{color:"white", textDecoration:'none'}} to='/dashboard'>
+            <Button color="inherit">Dashboard</Button>
+            </NavLink>
+
+                
+                <Button onClick={logOut} color="inherit">Logout</Button>
+              </Box>
               
-            <Button onClick={logOut} color="inherit">Logout</Button>
               :
             <NavLink style={{color:"white", textDecoration:'none'}} to='/login'>
             <Button color="inherit">Login</Button>

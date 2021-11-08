@@ -25,6 +25,10 @@ const useFirebase = () => {
       //send name to firebase to after creation        
                 const newUser = {email, displayName:name};
                 setUser(newUser);
+      // Save user to database ***********************************
+                saveUser(email, name, 'POST');     
+
+    //   update prfile ******************************************* 
                 updateProfile(auth.currentUser, {
                     displayName:name, 
                   }).then(() => {
@@ -63,6 +67,11 @@ const useFirebase = () => {
                 const user = result.user; 
                 setAuthError('');
 
+                // Save user to database ***********************************
+                saveUser(user.email, user.displayName, 'PUT');   
+                const destination = location?.state?.from || '/';
+                history.replace(destination);
+
             }).catch((error) => {
                 setAuthError(error.message);
 
@@ -94,6 +103,19 @@ const useFirebase = () => {
         })
             .finally(() => setIsLoding(false));
     };
+
+    // save user ==================================================
+    const saveUser = (email, displayName, method) => {
+        const user = {email, displayName};
+
+        fetch('http://localhost:5000/users',{
+            method:method,
+            headers:{'content-type':'application/json'},
+            body:JSON.stringify(user),
+        })
+        .then()
+
+    }
 
     return {
         authError,
